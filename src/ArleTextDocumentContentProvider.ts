@@ -7,6 +7,11 @@ export class ArleTextDocumentContentProvider implements TextDocumentContentProvi
     private _uri: Uri;
     public text: string;
     private _onDidChange = new EventEmitter<Uri>();
+    private serverPort: number;
+
+    public set SeverPort(value: number){
+        this.serverPort = value;
+    }
 
     public provideTextDocumentContent(uri: Uri, token: CancellationToken):Thenable<string>{
         this._uri = uri;
@@ -14,49 +19,40 @@ export class ArleTextDocumentContentProvider implements TextDocumentContentProvi
     }
 
     private generateArleOutput():Promise<string>{
-        /*
-        const htmlContent = this.origamiRun().then(text => {
-            return `
-            <body>
-            ${text}
-            </body>`;
-        });
-        */
         const htmlContent = `
-        <body>
-        ${this.text}
+        <head> <style type="text/css"> html, body{ height:100%; width:100%; } </style>
+        <script type="text/javascript">
+            function start(){
+                console.log('arle output');
+                var color = '';
+                var fontFamily = '';
+                var fontSize = '';
+                var theme = '';
+                var fontWeight = '';
+                try {
+                    computedStyle = window.getComputedStyle(document.body);
+                    color = computedStyle.color + '';
+                    backgroundColor = computedStyle.backgroundColor + '';
+                    fontFamily = computedStyle.fontFamily;
+                    fontSize = computedStyle.fontSize;
+                    fontWeight = computedStyle.fontWeight;
+                    theme = document.body.className;
+                }
+                catch(ex){
+                }
+                document.getElementById('myframe').src = 'http://localhost:${this.serverPort}/?theme=' + theme + '&color=' + encodeURIComponent(color) + "&backgroundColor=" + encodeURIComponent(backgroundColor) + "&fontFamily=" + encodeURIComponent(fontFamily) + "&fontWeight=" + encodeURIComponent(fontWeight) + "&fontSize=" + encodeURIComponent(fontSize);
+            }
+        </script>
+        </head>
+        <body onload="start()">
+        <iframe id="myframe" frameborder="0" style="border: 0px solid transparent;height:100%;width:100%;" src = "" seamless>
+        </iframe>
         </body>`;
-        
         return Promise.resolve(htmlContent);
     }
 
     get onDidChange(): Event<Uri> {
         return this._onDidChange.event;
-    }
-
-    private origamiRun(): Promise<string>{
-        let origamiCommand = 'origami konoha ';
-        let doc = window.activeTextEditor.document;
-        let pass = doc.uri.path;
-        let p = child_process.exec(origamiCommand + pass, (error, stdout, stderror) => {});
-        let output = Promise.resolve('test').then( buf =>{
-            let end = true;
-            p.stdout.on('data', function(data) {
-                console.log(data);
-                buf += data.toString();
-                let index = buf.indexOf('\n');
-                let interpreterIndex = buf.indexOf('Konoha🍃');
-                if(index > -1 && interpreterIndex == -1){
-                    buf += buf;
-                }
-            });
-            p.stdout.on('end', () => {
-                console.log(buf);
-                end = false;
-            })
-            return buf;
-        });
-        return output
     }
 
     public dispose(){

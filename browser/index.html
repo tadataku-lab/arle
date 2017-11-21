@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+    #btnArea{
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+    #messageView{
+        margin-top: 10px;
+        color: white;
+        font-family: "メイリオ", sans-serif;
+    }
+    button{
+        color: black;
+        background-color: greenyellow;
+        font-family: "メイリオ", sans-serif;
+
+    }
+    </style>
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div id="ArleOutput" class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <form>
+                    <div id="btnArea" class="btns">
+                        <button type="button" class="btn btn-primary" id="clearResultsBtn">Clear Results</button>
+                    </div>
+                </form>
+                <div id="messageView"></div>
+            </div>
+        </div>
+    </div>
+
+        <script type="text/javascript">
+    var ioSocket = io();
+    ioSocket.on( "connect", function() {} );
+    ioSocket.on( "disconnect", function() {} );
+
+    ioSocket.on( "appendResults", function( data ) { appendResults( data ) });
+
+    function appendResults( data ) {
+        $("#messageView").append( "<div>" + data + "</div>" );
+    }
+
+    $("#clearResultsBtn").click( function() {
+        $("#messageView").empty();
+    });
+
+    </script>
+    </body>
+</html>

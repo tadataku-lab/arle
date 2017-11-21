@@ -3,14 +3,21 @@
 
 import {CodeActionProvider, TextDocument, Range, CodeActionContext, CancellationToken, Command} from 'vscode';
 
-import {listFunction} from './ArleSystem';
+import { ArleSystem} from './ArleSystem';
 
 export class ArleCodeActions implements CodeActionProvider {
+
+	private arleSysytem: ArleSystem;
+
+	constructor(_arleSystem){
+		this.arleSysytem = _arleSystem;
+	}
+
     public provideCodeActions(document: TextDocument, range: Range, context: CodeActionContext, token: CancellationToken): Thenable<Command[]> {
         let promises = context.diagnostics.map(diag => {
 			if (diag.message.indexOf('Arle: ') === 0) {
                 let [_, envision] = /^Arle: (.+)/.exec(diag.message);
-                let obj = listFunction(envision);
+                let obj = this.arleSysytem.listFunction(envision);
                 let command = [];
 			    Object.keys(obj).forEach(
 						function(funcname){

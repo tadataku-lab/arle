@@ -23,13 +23,32 @@
             {
                 "command": "arle.interactive.start",
                 "title": "create arle output"
+            },
+            {
+                "command": "arle.server.start",
+                "title": "server_start"
+            },
+            {
+                "command": "arle.runKonoha5",
+                "title": "Chibi Run"
+            },
+            {
+                "command": "arle.push.message",
+                "title": "push"
             }
         ],
-        "languages": [{
-            "id": "konoha5",
-            "aliases": ["konoha5", "konoha5"],
-            "extensions": [".k"]
-        }]
+        "languages": [
+            {
+                "id": "konoha5",
+                "aliases": [
+                    "konoha5",
+                    "konoha5"
+                ],
+                "extensions": [
+                    ".k"
+                ]
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
@@ -44,5 +63,11 @@
         "mocha": "^3.5.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "ansi": "^0.3.1",
+        "cors": "^2.8.4",
+        "express": "^4.16.2",
+        "socket.io": "^2.0.4"
     }
 }
